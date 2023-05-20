@@ -1,7 +1,12 @@
 import { Body, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from 'src/entity/Todo.entity';
-import { DeleteResult, FindOneOptions, Repository, UpdateResult } from 'typeorm';
+import {
+  DeleteResult,
+  FindOneOptions,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
 export interface TodoInterface {
   id?: number;
   name: string;
@@ -20,7 +25,7 @@ export class TodosService {
     return this.todoRepository.find();
   }
   findOne(id: number): Promise<TodoInterface> {
-    const options: FindOneOptions<TodoInterface> = { where: {id} };
+    const options: FindOneOptions<TodoInterface> = { where: { id } };
     return this.todoRepository.findOne(options);
   }
   update(id: number, data: TodoInterface): Promise<UpdateResult> {

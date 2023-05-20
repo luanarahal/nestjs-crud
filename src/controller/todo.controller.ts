@@ -15,10 +15,9 @@ interface CreateTodoDto {
   name: string;
   complete: boolean;
 }
-
 @Controller('items')
 export class TodosController {
-  constructor(private todosService: TodosService) { }
+  constructor(private todosService: TodosService) {}
   @Post()
   async create(@Body() createTodoDto: CreateTodoDto) {
     const todo = await this.todosService.create(createTodoDto);
@@ -34,8 +33,8 @@ export class TodosController {
   }
   @Get(':id')
   async findOne(@Param('id') id: number) {
-     const item = await this.todosService.findOne(id);
-     return item;
+    const item = await this.todosService.findOne(id);
+    return item;
   }
   @Put(':id')
   async update(@Param('id') id: number, @Body() data: CreateTodoDto) {
