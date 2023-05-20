@@ -14,30 +14,30 @@ interface CreateTodoDto {
   name: string;
   complete: boolean;
 }
-@Controller('cats')
+@Controller('items')
 export class TodosController {
-  constructor(private todosService: TodosService) {}
+  constructor(private todosService: TodosService) { }
   @Post()
   async create(@Body() createTodoDto: CreateTodoDto) {
     const todo = await this.todosService.create(createTodoDto);
     if (!todo) {
-      return 'error in creating todo';
+      return 'Erro ao criar registro';
     }
-    return 'todo created successfully';
+    return 'Registro criado com sucesso';
   }
   @Get()
   async findAll(@Req() request: Request) {
-    const cats: Array<TodoInterface> = await this.todosService.findAll();
-    return cats;
+    const item: Array<TodoInterface> = await this.todosService.findAll();
+    return item;
   }
   @Put(':id')
   async update(@Param('id') id: string, @Body() body: any) {
-    const newCat: any = await this.todosService.update(id, body);
-    return 'cat updated';
+    const newItem: any = await this.todosService.update(id, body);
+    return 'Registro atualizado';
   }
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.todosService.delete(id);
-    return 'cat deleted';
+    return 'Registro deletado';
   }
 }
