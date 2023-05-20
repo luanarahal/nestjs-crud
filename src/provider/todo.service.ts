@@ -1,8 +1,9 @@
 import { Body, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from 'src/entity/Todo.entity';
-import { Repository } from 'typeorm';
+import { Any, FindOneOptions, Repository } from 'typeorm';
 export interface TodoInterface {
+  id?: number;
   name: string;
   complete: boolean;
 }
@@ -18,18 +19,22 @@ export class TodosService {
   findAll(): Promise<TodoInterface[]> {
     return this.todoRepository.find();
   }
-  update(id: string, data: any): Promise<any> {
+  findOne(id: number): Promise<TodoInterface> {
+    const options: FindOneOptions<TodoInterface> = { where: {id} };
+    return this.todoRepository.findOne(options);
+  }
+  update(id: number, data: any): Promise<any> {
     return this.todoRepository
       .createQueryBuilder()
       .update()
       .set({
         name: data.name,
-        complete: data.complete
+        complete: data.complete,
       })
       .where('id = :id', { id })
       .execute();
   }
-  delete(id: string): Promise<any> {
+  delete(id: number): Promise<any> {
     return this.todoRepository
       .createQueryBuilder()
       .delete()
