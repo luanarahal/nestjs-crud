@@ -24,6 +24,7 @@ export class TodosService {
       .update()
       .set({
         name: data.name,
+        complete: data.complete
       })
       .where('id = :id', { id })
       .execute();
