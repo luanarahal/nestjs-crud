@@ -26,7 +26,7 @@ export class TodosController {
     }
     return 'Registro criado com sucesso';
   }
-  @Get()
+ @Get()
   async findAll(@Req() request: Request) {
     const items: Array<TodoInterface> = await this.todosService.findAll();
     return items;
