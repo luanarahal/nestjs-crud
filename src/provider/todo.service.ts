@@ -1,7 +1,7 @@
 import { Body, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from 'src/entity/Todo.entity';
-import { Any, FindOneOptions, Repository } from 'typeorm';
+import { DeleteResult, FindOneOptions, Repository, UpdateResult } from 'typeorm';
 export interface TodoInterface {
   id?: number;
   name: string;
@@ -23,7 +23,7 @@ export class TodosService {
     const options: FindOneOptions<TodoInterface> = { where: {id} };
     return this.todoRepository.findOne(options);
   }
-  update(id: number, data: any): Promise<any> {
+  update(id: number, data: TodoInterface): Promise<UpdateResult> {
     return this.todoRepository
       .createQueryBuilder()
       .update()
@@ -34,7 +34,7 @@ export class TodosService {
       .where('id = :id', { id })
       .execute();
   }
-  delete(id: number): Promise<any> {
+  delete(id: number): Promise<DeleteResult> {
     return this.todoRepository
       .createQueryBuilder()
       .delete()

@@ -15,6 +15,7 @@ interface CreateTodoDto {
   name: string;
   complete: boolean;
 }
+
 @Controller('items')
 export class TodosController {
   constructor(private todosService: TodosService) { }
@@ -37,8 +38,8 @@ export class TodosController {
      return item;
   }
   @Put(':id')
-  async update(@Param('id') id: number, @Body() body: any) {
-    const newItem: any = await this.todosService.update(id, body);
+  async update(@Param('id') id: number, @Body() data: CreateTodoDto) {
+    const newItem = await this.todosService.update(id, data);
     return 'Registro atualizado';
   }
   @Delete(':id')
