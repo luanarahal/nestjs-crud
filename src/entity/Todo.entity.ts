@@ -10,4 +10,7 @@ export class Todo {
 
   @Column({ default: false })
   complete: boolean;
+ 
+  @Column({ default: null })
+  deletion_time: Date;
 }

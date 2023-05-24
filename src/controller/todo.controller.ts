@@ -14,6 +14,7 @@ interface CreateTodoDto {
   id: number;
   name: string;
   complete: boolean;
+  deletion_time: Date;
 }
 
 @Controller('items')
@@ -44,7 +45,12 @@ export class TodosController {
   }
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    await this.todosService.delete(id);
-    return 'Registro deletado';
+    const item = await this.todosService.findOne(id);
+    if (item) {
+      await this.todosService.delete(id);
+      return `Registro com a ID ${id} foi deletado`;
+    } else {
+      return `Registro com a ID ${id} não encontrado`;
+    }
   }
 }
