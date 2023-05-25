@@ -1,7 +1,7 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from 'src/entity/Todo.entity';
-import { DeleteResult, FindOneOptions, Raw, Repository, UpdateResult } from 'typeorm';
+import { FindOneOptions, Raw, Repository, UpdateResult } from 'typeorm';
 export interface TodoInterface {
   id?: number;
   name: string;
