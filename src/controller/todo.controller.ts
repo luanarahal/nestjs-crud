@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { TodoInterface, TodosService } from 'src/provider/todo.service';
-interface CreateTodoDto {
+interface TodoDto {
   id: number;
   name: string;
   complete: boolean;
@@ -22,12 +22,18 @@ interface CreateTodoDto {
 export class TodosController {
   constructor(private todosService: TodosService) { }
   @Post()
-  async create(@Body() createTodoDto: CreateTodoDto, @Res() res: Response) {
-    const todo = await this.todosService.create(createTodoDto);
-    if (!todo) {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Erro ao criar registro.'});
+  async create(@Body() createTodoDto: TodoDto, @Res() res: Response) {
+    if (!createTodoDto.name) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'O campo NAME não pode ser vazio. Por favor, preencher o campo corretamente.',
+      });
     }
-    res.status(HttpStatus.OK).json({ message: 'Registro criado com sucesso!'});
+    if (!this.todosService.validateFields(createTodoDto)) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: `Você digitou um campo inválido. Por favor, digitar somente campos existentes.`,
+      });
+    }
+    return res.status(HttpStatus.OK).json({ message: 'Registro criado com sucesso!' });
   }
   @Get()
   async findAll(@Res() res: Response) {
@@ -50,16 +56,23 @@ export class TodosController {
     }
   }
   @Put(':id')
-  async update(@Param('id') id: number, @Body() data: CreateTodoDto, @Res() res: Response) {
+  async update(
+    @Param('id') id: number, @Body() todoDto: TodoDto, @Res() res: Response) {
+    if(!todoDto.name) {
+      res.status(HttpStatus.BAD_REQUEST).send({ message: `Não foi possível atualizar o ID ${id} pois o campo NAME está vazio.` });
+    }
+    if (!this.todosService.validateFields(todoDto)) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: `Você digitou um campo inválido. Por favor, digitar somente campos existentes.`,
+      });
+    }
     const item = await this.todosService.findOne(id);
     if (item) {
-      await this.todosService.update(id, data);
-      res.status(HttpStatus.OK)
-      .json({ message: `Registro com a ID ${id} foi alterada com sucesso!`});
+      await this.todosService.update(id, todoDto);
+      res.status(HttpStatus.OK).send({ message: `Registro com a ID ${id} foi alterada com sucesso!` });
     } else {
-      res.status(HttpStatus.NOT_FOUND)
-      .json({ message: `Não foi possível atualizar o ID ${id} pois não existe.` });
-    } 
+      res.status(HttpStatus.NOT_FOUND).send({ message: `Não foi possível atualizar o ID ${id} pois o mesmo não existe.` });
+    }
   }
   @Delete(':id')
   async remove(@Param('id') id: number, @Res() res: Response) {
